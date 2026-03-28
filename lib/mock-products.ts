@@ -11,9 +11,11 @@ export interface MockProduct {
   image: string;
   images: string[];
   sizes: string[];
+  outOfStockSizes?: string[];
   rating: number;
   reviewCount: number;
   createdAt: string; // ISO date string
+  description?: string;
 }
 
 const MEN_SIZES = ["7", "7.5", "8", "8.5", "9", "9.5", "10", "10.5", "11", "12"];
@@ -250,6 +252,27 @@ export const MOCK_PRODUCTS: MockProduct[] = [
     createdAt: "2025-02-05T00:00:00Z",
   },
 ];
+
+// Patch descriptions and OOS sizes onto existing products
+MOCK_PRODUCTS[0].description =
+  "The Nike Air Max 270 React fuses two of Nike's most innovative cushioning technologies. A full-length React foam midsole pairs with a visible Air Max unit at the heel for a ride that's as responsive as it is cushioned. The breathable mesh upper keeps feet cool during long days on your feet.";
+MOCK_PRODUCTS[0].outOfStockSizes = ["7", "12"];
+
+MOCK_PRODUCTS[1].description =
+  "Engineered for long-distance running, the Adidas Ultraboost 22 features a Primeknit upper that adapts to your foot's natural movement. The responsive Boost midsole returns energy with every stride, while the Continental rubber outsole provides reliable grip on wet and dry surfaces.";
+MOCK_PRODUCTS[1].outOfStockSizes = ["7.5", "11"];
+
+MOCK_PRODUCTS[6].description =
+  "The shoe that started it all. The Air Jordan 1 Retro High OG brings back the iconic silhouette in premium leather with the classic Wings logo on the ankle collar. A must-have for any collector or sneaker enthusiast looking to own a piece of basketball history.";
+MOCK_PRODUCTS[6].outOfStockSizes = ["6", "12"];
+
+MOCK_PRODUCTS[7].description =
+  "Originally designed as a basketball shoe in 1989, the New Balance 550 has found new life as one of streetwear's hottest silhouettes. Clean white leather with green accents sits atop a vintage-inspired cupsole for a look that bridges sport and style.";
+MOCK_PRODUCTS[7].outOfStockSizes = ["8", "9"];
+
+export function getProductBySlug(slug: string): MockProduct | undefined {
+  return MOCK_PRODUCTS.find((p) => p.slug === slug);
+}
 
 export const ALL_BRANDS = [...new Set(MOCK_PRODUCTS.map((p) => p.brand))].sort();
 
