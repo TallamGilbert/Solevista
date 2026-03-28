@@ -15,6 +15,8 @@ export interface ProductCardProps {
   image: string;
   /** Optional: start with item already wishlisted */
   wishlisted?: boolean;
+  /** Grid mode: full-width instead of fixed scroll width */
+  fullWidth?: boolean;
 }
 
 export default function ProductCard({
@@ -25,6 +27,7 @@ export default function ProductCard({
   comparePrice,
   image,
   wishlisted = false,
+  fullWidth = false,
 }: ProductCardProps) {
   const [liked, setLiked] = useState(wishlisted);
 
@@ -34,7 +37,12 @@ export default function ProductCard({
       : null;
 
   return (
-    <article className="group relative flex-shrink-0 w-[220px] sm:w-[240px] rounded-2xl bg-white shadow-sm hover:shadow-md transition-all duration-300 hover:-translate-y-1 overflow-hidden">
+    <article
+      className={[
+        "group relative rounded-2xl bg-white shadow-sm hover:shadow-md transition-all duration-300 hover:-translate-y-1 overflow-hidden",
+        fullWidth ? "w-full" : "flex-shrink-0 w-[220px] sm:w-[240px]",
+      ].join(" ")}
+    >
 
       {/* Image */}
       <Link href={`/products/${slug}`} className="block">
