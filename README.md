@@ -1,4 +1,4 @@
-# Sneaqr
+# Solevista
 
 A sneaker marketplace built with Next.js 14, TypeScript, Tailwind CSS, Prisma, and Stripe.
 
