@@ -6,7 +6,7 @@ import ShopContent from "./ShopContent";
 export const metadata: Metadata = {
   title: "Shop",
   description:
-    "Browse our full collection of premium sneakers. Filter by category, brand, size, and price.",
+    "Browse Solévista's full collection of premium authentic footwear. Filter by category, brand, size, and price.",
 };
 
 function ShopSkeleton() {

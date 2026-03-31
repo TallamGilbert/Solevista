@@ -4,8 +4,13 @@ import { useCart } from "@/context/CartContext";
 import Navbar from "./Navbar";
 import Footer from "./Footer";
 import MobileNav from "./MobileNav";
+import WhatsAppFloat from "@/components/ui/WhatsAppFloat";
 
-export default function RootLayout({ children }: { children: React.ReactNode }) {
+export default function RootLayout({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
   const { cartCount } = useCart();
 
   return (
@@ -16,12 +21,11 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         pt-16 offsets the fixed navbar height.
         pb-16 on mobile offsets the fixed bottom nav.
       */}
-      <main className="flex-1 pt-16 pb-16 md:pb-0">
-        {children}
-      </main>
+      <main className="flex-1 pt-16 pb-16 md:pb-0">{children}</main>
 
       <Footer />
       <MobileNav cartCount={cartCount} />
+      <WhatsAppFloat />
     </div>
   );
 }

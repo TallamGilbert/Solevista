@@ -47,7 +47,7 @@ export default async function AdminPage() {
     },
     {
       label: "Revenue",
-      value: `$${totalRevenue.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`,
+      value: `KSh ${Math.round(totalRevenue).toLocaleString()}`,
       icon: DollarSign,
       href: "/admin/orders",
       color: "bg-green-50 text-green-600",
@@ -157,7 +157,7 @@ export default async function AdminPage() {
                       </span>
                     </td>
                     <td className="px-6 py-3.5 text-right font-bold text-soft-black">
-                      ${order.total.toFixed(2)}
+                      KSh {Math.round(order.total).toLocaleString()}
                     </td>
                   </tr>
                 ))}

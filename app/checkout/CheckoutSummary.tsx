@@ -40,10 +40,10 @@ export default function CheckoutSummary({
             </div>
             <div className="flex-1 min-w-0">
               <p className="text-xs font-semibold text-soft-black truncate">{item.name}</p>
-              <p className="text-[11px] text-gray-400">Size US {item.size}</p>
+              <p className="text-[11px] text-gray-400">Size UK {item.size}</p>
             </div>
             <span className="text-xs font-bold text-soft-black flex-shrink-0">
-              ${(item.price * item.quantity).toFixed(2)}
+              KSh {Math.round(item.price * item.quantity).toLocaleString()}
             </span>
           </div>
         ))}
@@ -53,23 +53,23 @@ export default function CheckoutSummary({
       <div className="border-t border-gray-100 pt-4 flex flex-col gap-2 text-sm">
         <div className="flex justify-between text-gray-500">
           <span>Subtotal</span>
-          <span className="font-semibold text-soft-black">${cartTotal.toFixed(2)}</span>
+          <span className="font-semibold text-soft-black">KSh {Math.round(cartTotal).toLocaleString()}</span>
         </div>
         {discount > 0 && (
           <div className="flex justify-between text-green-600">
             <span>Discount</span>
-            <span className="font-semibold">−${discount.toFixed(2)}</span>
+            <span className="font-semibold">−KSh {Math.round(discount).toLocaleString()}</span>
           </div>
         )}
         <div className="flex justify-between text-gray-500">
           <span>Shipping</span>
           <span className="font-semibold text-soft-black">
-            {shipping === 0 ? <span className="text-green-600">Free</span> : `$${shipping.toFixed(2)}`}
+            {shipping === 0 ? <span className="text-green-600">Free</span> : `KSh ${Math.round(shipping).toLocaleString()}`}
           </span>
         </div>
         <div className="flex justify-between pt-3 border-t border-gray-100">
           <span className="font-black text-soft-black">Total</span>
-          <span className="font-black text-soft-black">${orderTotal.toFixed(2)}</span>
+          <span className="font-black text-soft-black">KSh {Math.round(orderTotal).toLocaleString()}</span>
         </div>
       </div>
     </div>
@@ -87,7 +87,7 @@ export default function CheckoutSummary({
             Order Summary ({cartItems.length} item{cartItems.length !== 1 ? "s" : ""})
           </span>
           <div className="flex items-center gap-2">
-            <span className="text-sm font-black text-soft-black">${orderTotal.toFixed(2)}</span>
+            <span className="text-sm font-black text-soft-black">KSh {Math.round(orderTotal).toLocaleString()}</span>
             <ChevronDown
               size={16}
               className={`text-gray-400 transition-transform duration-200 ${mobileOpen ? "rotate-180" : ""}`}

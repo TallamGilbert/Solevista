@@ -18,6 +18,7 @@ export interface CartItem {
   price: number;
   image: string;
   size: string;
+  sizeId?: string;
   quantity: number;
 }
 
@@ -35,7 +36,7 @@ interface CartContextValue {
 
 const CartContext = createContext<CartContextValue | null>(null);
 
-const STORAGE_KEY = "sneaqr-cart";
+const STORAGE_KEY = "solevista-cart";
 
 function loadFromStorage(): CartItem[] {
   if (typeof window === "undefined") return [];

@@ -15,7 +15,7 @@ const STEPS = [
   { id: 2, label: "Payment" },
 ];
 
-const SHIPPING_THRESHOLD = 100;
+const SHIPPING_THRESHOLD = 13000;
 
 function StepIndicator({ current }: { current: Step }) {
   return (
@@ -92,7 +92,7 @@ export default function CheckoutPage() {
     );
   }
 
-  const shipping = cartTotal >= SHIPPING_THRESHOLD ? 0 : 9.99;
+  const shipping = cartTotal >= SHIPPING_THRESHOLD ? 0 : 500;
   const orderTotal = cartTotal + shipping;
 
   function handleShippingSubmit(data: ShippingFormData) {

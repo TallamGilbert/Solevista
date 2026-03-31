@@ -1,44 +1,53 @@
-import { Truck, RotateCcw, ShieldCheck, Sparkles } from "lucide-react";
+import { Truck, RefreshCw, ShieldCheck, BadgeCheck } from "lucide-react";
 
 const BADGES = [
   {
-    Icon: Truck,
     title: "Free Shipping",
-    description: "On all orders over $100",
+    description: "On orders over KSh 13,000",
+    icon: Truck,
   },
   {
-    Icon: RotateCcw,
     title: "Easy Returns",
-    description: "30-day hassle-free returns",
+    description: "30-day hassle-free policy",
+    icon: RefreshCw,
   },
   {
-    Icon: ShieldCheck,
     title: "Secure Payment",
-    description: "256-bit SSL encryption",
+    description: "M-Pesa, Card & PayPal accepted",
+    icon: ShieldCheck,
   },
   {
-    Icon: Sparkles,
-    title: "Premium Quality",
-    description: "100% authentic products",
+    title: "100% Authentic",
+    description: "All footwear verified & certified",
+    icon: BadgeCheck,
   },
 ];
 
 export default function TrustBadges() {
   return (
-    <section className="border-y border-gray-100 py-10">
+    <section className="bg-white border-y border-gray-100 py-6">
       <div className="max-w-7xl mx-auto px-6 md:px-16">
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-6 md:gap-4">
-          {BADGES.map(({ Icon, title, description }) => (
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-6 md:gap-0 md:divide-x md:divide-gray-100">
+          {BADGES.map(({ title, description, icon: Icon }) => (
             <div
               key={title}
-              className="flex flex-col sm:flex-row items-center sm:items-start gap-3 text-center sm:text-left"
+              className="flex items-start md:items-center gap-3 md:px-8 first:md:pl-0 last:md:pr-0"
             >
-              <div className="flex-shrink-0 w-11 h-11 rounded-2xl bg-accent/10 flex items-center justify-center">
-                <Icon size={20} className="text-accent" strokeWidth={1.75} />
-              </div>
+              <Icon
+                size={16}
+                strokeWidth={1.5}
+                className="flex-shrink-0 text-[#121212] mt-0.5 md:mt-0"
+              />
               <div>
-                <p className="text-sm font-bold text-soft-black">{title}</p>
-                <p className="text-xs text-gray-500 mt-0.5 leading-snug">{description}</p>
+                <p
+                  className="text-[13px] font-semibold text-[#121212]"
+                  style={{ letterSpacing: "-0.01em" }}
+                >
+                  {title}
+                </p>
+                <p className="text-[11px] text-gray-400 mt-0.5 leading-snug">
+                  {description}
+                </p>
               </div>
             </div>
           ))}

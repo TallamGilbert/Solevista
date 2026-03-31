@@ -13,7 +13,7 @@ const MOCK_DISCOUNT_CODES: Record<string, number> = {
   FLASH15: 15,
 };
 
-const SHIPPING_THRESHOLD = 100;
+const SHIPPING_THRESHOLD = 13000;
 
 export default function CartPage() {
   const { cartItems, cartCount, cartTotal, updateQuantity, removeItem } = useCart();
@@ -45,7 +45,7 @@ export default function CartPage() {
     setCodeError("");
   }
 
-  const shipping = cartTotal >= SHIPPING_THRESHOLD ? 0 : 9.99;
+  const shipping = cartTotal >= SHIPPING_THRESHOLD ? 0 : 500;
   const discountAmount = (cartTotal * discountPct) / 100;
   const orderTotal = cartTotal - discountAmount + shipping;
 
@@ -131,7 +131,7 @@ export default function CartPage() {
                     >
                       {item.name}
                     </Link>
-                    <p className="text-xs text-gray-500 mt-0.5">Size US {item.size}</p>
+                    <p className="text-xs text-gray-500 mt-0.5">Size UK {item.size}</p>
                   </div>
                   {/* Remove */}
                   <button
@@ -146,7 +146,7 @@ export default function CartPage() {
                 {/* Price + qty */}
                 <div className="flex items-center justify-between mt-auto pt-2">
                   <span className="text-sm font-black text-soft-black">
-                    ${(item.price * item.quantity).toFixed(2)}
+                    KSh {Math.round(item.price * item.quantity).toLocaleString()}
                   </span>
 
                   {/* Quantity stepper */}
@@ -198,13 +198,13 @@ export default function CartPage() {
             <div className="flex flex-col gap-3 text-sm">
               <div className="flex justify-between text-gray-600">
                 <span>Subtotal</span>
-                <span className="font-semibold text-soft-black">${cartTotal.toFixed(2)}</span>
+                <span className="font-semibold text-soft-black">KSh {Math.round(cartTotal).toLocaleString()}</span>
               </div>
 
               {discountPct > 0 && (
                 <div className="flex justify-between text-green-600">
                   <span>Discount ({discountPct}%)</span>
-                  <span className="font-semibold">−${discountAmount.toFixed(2)}</span>
+                  <span className="font-semibold">−KSh {Math.round(discountAmount).toLocaleString()}</span>
                 </div>
               )}
 
@@ -214,21 +214,21 @@ export default function CartPage() {
                   {shipping === 0 ? (
                     <span className="text-green-600">Free</span>
                   ) : (
-                    `$${shipping.toFixed(2)}`
+                    `KSh ${shipping.toLocaleString()}`
                   )}
                 </span>
               </div>
 
               {shipping > 0 && (
                 <p className="text-[11px] text-gray-400">
-                  Add ${(SHIPPING_THRESHOLD - cartTotal).toFixed(2)} more for free shipping
+                  Add KSh {Math.round(SHIPPING_THRESHOLD - cartTotal).toLocaleString()} more for free shipping
                 </p>
               )}
 
               <div className="border-t border-gray-100 pt-3 flex justify-between">
                 <span className="font-black text-soft-black">Total</span>
                 <span className="font-black text-soft-black text-base">
-                  ${orderTotal.toFixed(2)}
+                  KSh {Math.round(orderTotal).toLocaleString()}
                 </span>
               </div>
             </div>

@@ -16,7 +16,7 @@ export default async function AdminProductsPage() {
   const products = await prisma.product.findMany({
     orderBy: { createdAt: "desc" },
     include: {
-      _count: { select: { reviews: true, orderItems: true } },
+      _count: { select: { orderItems: true } },
     },
   });
 
@@ -111,11 +111,11 @@ export default async function AdminProductsPage() {
                     {/* Price */}
                     <td className="px-4 py-3">
                       <span className="font-semibold text-soft-black">
-                        ${product.price.toFixed(2)}
+                        KSh {Math.round(product.price).toLocaleString()}
                       </span>
                       {product.comparePrice && product.comparePrice > product.price && (
                         <span className="text-xs text-gray-400 line-through ml-1.5">
-                          ${product.comparePrice.toFixed(2)}
+                          KSh {Math.round(product.comparePrice).toLocaleString()}
                         </span>
                       )}
                     </td>

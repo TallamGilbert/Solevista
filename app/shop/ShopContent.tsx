@@ -25,8 +25,6 @@ const SORT_OPTIONS = [
   { label: "Price: High to Low", value: "price-desc" },
 ];
 
-// ─── URL param helpers ────────────────────────────────────────────────────────
-
 function useShopParams() {
   const searchParams = useSearchParams();
 
@@ -42,8 +40,6 @@ function useShopParams() {
   return { category, brands, sizes, minPrice, maxPrice, sort, q, page };
 }
 
-// ─── Main component ───────────────────────────────────────────────────────────
-
 export default function ShopContent() {
   const router = useRouter();
   const params = useShopParams();
@@ -51,7 +47,6 @@ export default function ShopContent() {
   const [filterOpen, setFilterOpen] = useState(false);
   const [sortOpen, setSortOpen] = useState(false);
 
-  // Build new URL params and push
   const updateParams = useCallback(
     (updates: Record<string, string | null>) => {
       const current = new URLSearchParams(window.location.search);
@@ -62,7 +57,6 @@ export default function ShopContent() {
           current.set(key, val);
         }
       }
-      // Reset to page 1 on any filter change
       if (!("page" in updates)) current.delete("page");
       startTransition(() => {
         router.push(`/shop?${current.toString()}`, { scroll: false });
@@ -71,7 +65,6 @@ export default function ShopContent() {
     [router]
   );
 
-  // Filter handler
   function handleFilterChange<K extends keyof FilterValues>(
     key: K,
     value: FilterValues[K]
@@ -116,8 +109,7 @@ export default function ShopContent() {
     window.scrollTo({ top: 0, behavior: "smooth" });
   }
 
-  // ── Filter + sort logic ───────────────────────────────────────────────────
-
+  // Filter + sort
   let filtered = MOCK_PRODUCTS.filter((p) => {
     if (params.category && p.category !== params.category) return false;
     if (params.brands.length && !params.brands.includes(p.brand)) return false;
@@ -134,12 +126,9 @@ export default function ShopContent() {
 
   filtered = [...filtered].sort((a, b) => {
     switch (params.sort) {
-      case "price-asc":
-        return a.price - b.price;
-      case "price-desc":
-        return b.price - a.price;
-      case "popular":
-        return b.reviewCount - a.reviewCount;
+      case "price-asc": return a.price - b.price;
+      case "price-desc": return b.price - a.price;
+      case "popular": return b.reviewCount - a.reviewCount;
       case "newest":
       default:
         return new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime();
@@ -180,15 +169,11 @@ export default function ShopContent() {
 
       {/* Search + sort toolbar */}
       <div className="flex items-center gap-3 mb-6">
-        {/* Search */}
         <div className="relative flex-1 max-w-sm">
-          <Search
-            size={15}
-            className="absolute left-3.5 top-1/2 -translate-y-1/2 text-gray-400"
-          />
+          <Search size={15} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-gray-400" />
           <input
             type="search"
-            placeholder="Search sneakers..."
+            placeholder="Search footwear..."
             defaultValue={params.q}
             onChange={(e) => handleSearch(e.target.value)}
             aria-label="Search products"
@@ -221,17 +206,11 @@ export default function ShopContent() {
             className="flex items-center gap-1.5 px-4 py-2.5 rounded-2xl border border-gray-200 text-sm font-semibold text-soft-black bg-white hover:bg-light-gray transition-colors duration-150 whitespace-nowrap"
           >
             {currentSortLabel}
-            <ChevronDown
-              size={14}
-              className={`transition-transform duration-200 ${sortOpen ? "rotate-180" : ""}`}
-            />
+            <ChevronDown size={14} className={`transition-transform duration-200 ${sortOpen ? "rotate-180" : ""}`} />
           </button>
           {sortOpen && (
             <>
-              <div
-                className="fixed inset-0 z-10"
-                onClick={() => setSortOpen(false)}
-              />
+              <div className="fixed inset-0 z-10" onClick={() => setSortOpen(false)} />
               <div className="absolute right-0 top-full mt-1.5 z-20 bg-white rounded-2xl shadow-lg border border-gray-100 overflow-hidden min-w-[180px]">
                 {SORT_OPTIONS.map(({ label, value }) => (
                   <button
@@ -256,27 +235,33 @@ export default function ShopContent() {
       {/* Body: sidebar + grid */}
       <div className="flex gap-8">
 
-        {/* Sidebar — always visible md+ */}
+        {/* 
+          Single FilterSidebar instance handles both mobile (drawer) 
+          and desktop (static sidebar) via its own internal responsive logic.
+          isOpen controls the mobile drawer only.
+        */}
         <div className="hidden md:block w-56 flex-shrink-0">
           <div className="sticky top-24">
             <FilterSidebar
               values={filterValues}
               onChange={handleFilterChange}
               onClear={handleClearFilters}
-              isOpen={false}
+              isOpen={true}   // always "open" on desktop — handled inside component
               onClose={() => {}}
             />
           </div>
         </div>
 
-        {/* Mobile sidebar */}
-        <FilterSidebar
-          values={filterValues}
-          onChange={handleFilterChange}
-          onClear={handleClearFilters}
-          isOpen={filterOpen}
-          onClose={() => setFilterOpen(false)}
-        />
+        {/* Mobile drawer — only mounts when opened */}
+        {filterOpen && (
+          <FilterSidebar
+            values={filterValues}
+            onChange={handleFilterChange}
+            onClear={handleClearFilters}
+            isOpen={filterOpen}
+            onClose={() => setFilterOpen(false)}
+          />
+        )}
 
         {/* Product grid */}
         <div className="flex-1 min-w-0">

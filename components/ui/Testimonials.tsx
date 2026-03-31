@@ -1,96 +1,88 @@
-import { Star } from "lucide-react";
-
 const REVIEWS = [
   {
-    name: "Marcus T.",
-    initials: "MT",
-    color: "bg-yellow-100 text-yellow-700",
-    rating: 5,
+    name: "Brian M.",
     product: "Jordan 1 Retro High OG",
+    initials: "BM",
     quote:
-      "Sneaqr had the best price I found anywhere online and shipping was incredibly fast. Packaging was pristine — these are 100% legit. My new go-to.",
+      "Solévista has the best selection and prices for authentic footwear in Kenya. Delivery was super fast and packaging flawless. Now my favorite go-to spot.",
   },
   {
-    name: "Priya S.",
-    initials: "PS",
-    color: "bg-purple-100 text-purple-700",
-    rating: 5,
+    name: "Aisha N.",
     product: "Adidas Stan Smith Lux",
+    initials: "AN",
     quote:
-      "Clean site, easy checkout, and the shoes look even better in person. Love the wishlist feature too — already have my next three picks saved.",
+      "Clean experience at Solévista, smooth checkout, and everything arrived in perfect condition. Love the wishlist feature and M-Pesa payment. Highly recommend!",
   },
   {
-    name: "Jordan K.",
-    initials: "JK",
-    color: "bg-blue-100 text-blue-700",
-    rating: 4,
+    name: "Odhiambo J.",
     product: "New Balance 550",
+    initials: "OJ",
     quote:
-      "Great selection and competitive pricing. The size guide was accurate, which I really appreciated. Will definitely be ordering again soon.",
+      "Solévista has the widest authentic footwear range I've found locally. Unbeatable prices, size guide was accurate, M-Pesa convenient. Definitely ordering again!",
   },
 ];
 
-function StarRow({ rating }: { rating: number }) {
-  return (
-    <div className="flex items-center gap-0.5">
-      {Array.from({ length: 5 }).map((_, i) => (
-        <Star
-          key={i}
-          size={14}
-          strokeWidth={0}
-          className={i < rating ? "fill-accent" : "fill-gray-200"}
-        />
-      ))}
-    </div>
-  );
-}
-
 export default function Testimonials() {
   return (
-    <section className="py-16 md:py-24 bg-light-gray">
+    <section className="py-20 md:py-28 bg-white">
       <div className="max-w-7xl mx-auto px-6 md:px-16">
 
         {/* Header */}
-        <div className="mb-10 text-center">
-          <p className="text-xs font-semibold uppercase tracking-widest text-accent mb-2">
+        <div className="mb-14">
+          <p className="text-[11px] tracking-[0.2em] uppercase text-gray-400 mb-2">
             Reviews
           </p>
-          <h2 className="text-3xl md:text-4xl font-black text-soft-black">
-            What Our Customers Say
+          <h2
+            className="text-3xl md:text-4xl font-black text-[#121212]"
+            style={{ letterSpacing: "-0.02em" }}
+          >
+            What customers say
           </h2>
         </div>
 
         {/* Cards */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
-          {REVIEWS.map(({ name, initials, color, rating, product, quote }) => (
+          {REVIEWS.map(({ name, product, initials, quote }) => (
             <div
               key={name}
-              className="flex flex-col gap-4 bg-white rounded-2xl p-6 shadow-sm hover:shadow-md transition-shadow duration-300"
+              className="flex flex-col justify-between gap-8 rounded-2xl p-7 border border-gray-100 hover:border-gray-200 transition-colors duration-200"
+              style={{ background: "#FAFAF9" }}
             >
-              {/* Stars */}
-              <StarRow rating={rating} />
+              {/* Large decorative quote mark */}
+              <div className="flex flex-col gap-5">
+                <span
+                  className="text-5xl font-black text-[#EAB308] leading-none select-none"
+                  aria-hidden="true"
+                >
+                  &ldquo;
+                </span>
+                <p
+                  className="text-sm text-[#444] leading-relaxed"
+                  style={{ letterSpacing: "0.01em" }}
+                >
+                  {quote}
+                </p>
+              </div>
 
-              {/* Quote */}
-              <p className="text-sm text-gray-600 leading-relaxed flex-1">
-                &ldquo;{quote}&rdquo;
-              </p>
-
-              {/* Footer */}
-              <div className="flex items-center gap-3 pt-3 border-t border-gray-100">
-                {/* Avatar initials */}
+              {/* Author */}
+              <div className="flex items-center gap-3 pt-5 border-t border-gray-100">
+                {/* Initials avatar */}
                 <div
-                  className={[
-                    "w-9 h-9 rounded-full flex items-center justify-center text-xs font-bold flex-shrink-0",
-                    color,
-                  ].join(" ")}
+                  className="w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0 text-[11px] font-bold text-[#121212]"
+                  style={{ background: "#F0EDE8" }}
                 >
                   {initials}
                 </div>
                 <div>
-                  <p className="text-sm font-bold text-soft-black leading-none">
+                  <p
+                    className="text-[13px] font-semibold text-[#121212] leading-none"
+                    style={{ letterSpacing: "-0.01em" }}
+                  >
                     {name}
                   </p>
-                  <p className="text-[11px] text-gray-400 mt-0.5">{product}</p>
+                  <p className="text-[11px] text-gray-400 mt-0.5 uppercase tracking-wider">
+                    {product}
+                  </p>
                 </div>
               </div>
             </div>

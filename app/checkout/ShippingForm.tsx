@@ -20,15 +20,19 @@ const shippingSchema = z.object({
 export type ShippingFormData = z.infer<typeof shippingSchema>;
 
 const COUNTRIES = [
-  "United States",
+  "Kenya",
+  "Uganda",
+  "Tanzania",
+  "Rwanda",
+  "Ethiopia",
+  "Nigeria",
+  "South Africa",
   "United Kingdom",
+  "United States",
   "Canada",
   "Australia",
   "Germany",
   "France",
-  "Kenya",
-  "Nigeria",
-  "South Africa",
   "Netherlands",
   "Sweden",
   "Japan",
@@ -87,7 +91,7 @@ export default function ShippingForm({ defaultValues, onSubmit }: ShippingFormPr
       <Field label="Street Address" error={errors.address?.message}>
         <input
           {...register("address")}
-          placeholder="123 Sneaker Lane, Apt 4B"
+          placeholder="Moi Avenue, Apt 4B"
           autoComplete="street-address"
           className={inputCls(!!errors.address)}
         />

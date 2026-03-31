@@ -27,30 +27,51 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
         password: { label: "Password", type: "password" },
       },
       async authorize(credentials) {
-        const parsed = credentialsSchema.safeParse(credentials);
-        if (!parsed.success) return null;
-
-        const { email, password } = parsed.data;
-
-        let user;
         try {
-          user = await prisma.user.findUnique({ where: { email } });
-        } catch {
-          // DB not reachable in dev — return null gracefully
+          const parsed = credentialsSchema.safeParse(credentials);
+          if (!parsed.success) {
+            console.error("[auth] Schema validation failed:", parsed.error);
+            return null;
+          }
+
+          const { email, password } = parsed.data;
+
+          let user;
+          try {
+            user = await prisma.user.findUnique({ where: { email } });
+          } catch (err) {
+            console.error("[auth] Database error:", err);
+            return null;
+          }
+
+          if (!user) {
+            console.error("[auth] User not found:", email);
+            return null;
+          }
+
+          if (!user.password) {
+            console.error("[auth] User has no password hash:", email);
+            return null;
+          }
+
+          const valid = await bcrypt.compare(password, user.password);
+          if (!valid) {
+            console.error("[auth] Password mismatch for:", email);
+            return null;
+          }
+
+          console.log("[auth] Login successful for:", email);
+
+          return {
+            id: user.id,
+            name: user.name,
+            email: user.email,
+            role: user.role,
+          };
+        } catch (err) {
+          console.error("[auth] Unexpected error in authorize:", err);
           return null;
         }
-
-        if (!user || !user.password) return null;
-
-        const valid = await bcrypt.compare(password, user.password);
-        if (!valid) return null;
-
-        return {
-          id: user.id,
-          name: user.name,
-          email: user.email,
-          role: user.role,
-        };
       },
     }),
   ],

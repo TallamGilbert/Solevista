@@ -8,6 +8,7 @@ import ProductCard from "@/components/ui/ProductCard";
 import ProductGallery from "./ProductGallery";
 import ProductActions from "./ProductActions";
 import DescriptionAccordion from "./DescriptionAccordion";
+import WriteReviewModal from "./WriteReviewModal";
 
 // ─── Static params ────────────────────────────────────────────────────────────
 
@@ -24,7 +25,7 @@ export async function generateMetadata({
   if (!product) return {};
   return {
     title: product.name,
-    description: `Shop ${product.name} by ${product.brand} at Sneaqr. $${product.price.toFixed(2)}.`,
+    description: `Shop ${product.name} by ${product.brand} at Sneaqr. KSh ${Math.round(product.price).toLocaleString()}.`,
   };
 }
 
@@ -33,8 +34,8 @@ export async function generateMetadata({
 const MOCK_REVIEWS = [
   {
     id: "r1",
-    name: "Marcus T.",
-    initials: "MT",
+    name: "Brian M.",
+    initials: "BM",
     color: "bg-yellow-100 text-yellow-700",
     rating: 5,
     date: "March 12, 2025",
@@ -43,8 +44,8 @@ const MOCK_REVIEWS = [
   },
   {
     id: "r2",
-    name: "Priya S.",
-    initials: "PS",
+    name: "Aisha N.",
+    initials: "AN",
     color: "bg-purple-100 text-purple-700",
     rating: 4,
     date: "February 28, 2025",
@@ -53,8 +54,8 @@ const MOCK_REVIEWS = [
   },
   {
     id: "r3",
-    name: "Jordan K.",
-    initials: "JK",
+    name: "Odhiambo J.",
+    initials: "OJ",
     color: "bg-blue-100 text-blue-700",
     rating: 5,
     date: "January 19, 2025",
@@ -105,7 +106,7 @@ export default function ProductPage({
 
   const description =
     product.description ??
-    `The ${product.name} is a premium sneaker from ${product.brand}, designed for those who demand both style and performance. Crafted with quality materials and thoughtful construction, this shoe delivers on every front — from the streets to the gym and everywhere in between.`;
+    `The ${product.name} is a premium footwear piece from ${product.brand}, designed for those who demand both style and performance. Crafted with quality materials and thoughtful construction, this shoe delivers on every front — from everyday wear to special occasions.`;
 
   return (
     <div className="max-w-7xl mx-auto px-6 md:px-16 py-8 md:py-12">
@@ -178,9 +179,7 @@ export default function ProductPage({
               </div>
             </div>
           </div>
-          <button className="hidden sm:block px-5 py-2.5 rounded-2xl border border-gray-200 text-sm font-semibold text-soft-black hover:bg-light-gray transition-colors duration-150">
-            Write a Review
-          </button>
+          <WriteReviewModal productId={product.id} />
         </div>
 
         {/* Rating breakdown bars */}

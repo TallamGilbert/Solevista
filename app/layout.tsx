@@ -1,22 +1,31 @@
 import type { Metadata } from "next";
-import localFont from "next/font/local";
+import { Inter } from "next/font/google";
 import "./globals.css";
 import RootLayout from "@/components/layout/RootLayout";
 import Providers from "@/components/layout/Providers";
+import { Playfair_Display } from "next/font/google";
 
-const geistSans = localFont({
-  src: "./fonts/GeistVF.woff",
-  variable: "--font-geist-sans",
-  weight: "100 900",
+
+const inter = Inter({
+  subsets: ["latin"],
+  variable: "--font-inter",
+  display: "swap",
+});
+
+const playfair = Playfair_Display({
+  subsets: ["latin"],
+  variable: "--font-playfair",
+  style: ["italic"],
+  display: "swap",
 });
 
 export const metadata: Metadata = {
   title: {
-    default: "Sneaqr — Premium Sneakers",
+    default: "Solévista — Premium Footwear Kenya",
     template: "%s | Sneaqr",
   },
   description:
-    "Shop premium sneakers for men and women. New drops, top brands, and exclusive releases.",
+    "Shop premium authentic footwear in Kenya. New arrivals, top brands, and exclusive styles for every occasion.",
 };
 
 export default function Layout({
@@ -26,7 +35,7 @@ export default function Layout({
 }>) {
   return (
     <html lang="en">
-      <body className={`${geistSans.variable} font-sans antialiased`}>
+      <body className={`${inter.variable} ${playfair.variable} font-sans antialiased`}>
         <Providers>
           <RootLayout>{children}</RootLayout>
         </Providers>

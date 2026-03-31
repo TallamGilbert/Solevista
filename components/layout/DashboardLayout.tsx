@@ -28,9 +28,13 @@ const ADMIN_LINKS = [
 export default function DashboardLayout({
   children,
   variant,
+  signOutDesktop,
+  signOutMobile,
 }: {
   children: React.ReactNode;
   variant: Variant;
+  signOutDesktop?: React.ReactNode;
+  signOutMobile?: React.ReactNode;
 }) {
   const pathname = usePathname();
   const links = variant === "admin" ? ADMIN_LINKS : USER_LINKS;
@@ -69,6 +73,7 @@ export default function DashboardLayout({
                   </Link>
                 );
               })}
+              {signOutDesktop}
             </nav>
           </div>
         </aside>
@@ -96,6 +101,7 @@ export default function DashboardLayout({
                 </Link>
               );
             })}
+            {signOutMobile}
           </nav>
         </div>
 

@@ -30,17 +30,12 @@ export async function POST(req: NextRequest) {
   const { productId, rating, comment } = parsed.data;
 
   try {
-    const product = await prisma.product.findUnique({ where: { id: productId } });
-    if (!product) {
-      return NextResponse.json({ error: "Product not found" }, { status: 404 });
-    }
-
     const existing = await prisma.review.findFirst({
       where: { userId: session.user.id, productId },
     });
     if (existing) {
       return NextResponse.json(
-        { error: "You have already reviewed this product" },
+        { error: "You have already reviewed this product." },
         { status: 409 }
       );
     }
@@ -56,19 +51,6 @@ export async function POST(req: NextRequest) {
         user: { select: { name: true } },
       },
     });
-
-    // Recompute and persist the product's average rating
-    const { _avg } = await prisma.review.aggregate({
-      where: { productId },
-      _avg: { rating: true },
-    });
-
-    if (_avg.rating !== null) {
-      await prisma.product.update({
-        where: { id: productId },
-        data: { rating: _avg.rating },
-      });
-    }
 
     return NextResponse.json(review, { status: 201 });
   } catch (err) {

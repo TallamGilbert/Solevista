@@ -2,20 +2,20 @@
 
 import { CreditCard, Smartphone } from "lucide-react";
 
-export type PaymentMethod = "card";
+export type PaymentMethod = "card" | "mpesa";
 
 const METHODS = [
+  {
+    id: "mpesa" as PaymentMethod,
+    label: "M-Pesa",
+    Icon: Smartphone,
+    comingSoon: false,
+  },
   {
     id: "card" as PaymentMethod,
     label: "Card",
     Icon: CreditCard,
     comingSoon: false,
-  },
-  {
-    id: "mpesa" as const,
-    label: "M-Pesa",
-    Icon: Smartphone,
-    comingSoon: true,
   },
 ];
 

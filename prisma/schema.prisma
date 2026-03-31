@@ -84,7 +84,6 @@ model Product {
   updatedAt    DateTime @updatedAt
 
   sizes      Size[]
-  reviews    Review[]
   orderItems OrderItem[]
   wishlists  WishlistProduct[]
 }
@@ -105,7 +104,8 @@ model Size {
 
 model Order {
   id              String      @id @default(cuid())
-  userId          String
+  userId          String?
+  guestEmail      String?
   status          OrderStatus @default(PENDING)
   total           Float
   shippingAddress Json
@@ -113,21 +113,22 @@ model Order {
   createdAt       DateTime    @default(now())
   updatedAt       DateTime    @updatedAt
 
-  user  User        @relation(fields: [userId], references: [id])
+  user  User?       @relation(fields: [userId], references: [id])
   items OrderItem[]
 }
 
 model OrderItem {
-  id        String @id @default(cuid())
+  id        String  @id @default(cuid())
   orderId   String
-  productId String
-  sizeId    String
+  productId String?
+  sizeId    String?
+  sizeLabel String?
   quantity  Int
   price     Float
 
-  order   Order   @relation(fields: [orderId], references: [id], onDelete: Cascade)
-  product Product @relation(fields: [productId], references: [id])
-  size    Size    @relation(fields: [sizeId], references: [id])
+  order   Order    @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  product Product? @relation(fields: [productId], references: [id])
+  size    Size?    @relation(fields: [sizeId], references: [id])
 }
 
 // ─── Reviews ─────────────────────────────────────────────────────────────────
@@ -140,8 +141,7 @@ model Review {
   comment   String?  @db.Text
   createdAt DateTime @default(now())
 
-  user    User    @relation(fields: [userId], references: [id])
-  product Product @relation(fields: [productId], references: [id])
+  user User @relation(fields: [userId], references: [id])
 }
 
 // ─── Wishlist ────────────────────────────────────────────────────────────────
@@ -196,9 +196,14 @@ enum Role {
 enum Category {
   MEN
   WOMEN
+  KIDS
   SNEAKERS
   SPORTS
   CASUAL
+  RUNNING
+  BOOTS
+  SANDALS
+  FORMAL
 }
 
 enum OrderStatus {

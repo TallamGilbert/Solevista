@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { useState } from "react";
+import { useCallback, useState } from "react";
 import { Heart } from "lucide-react";
 
 export interface ProductCardProps {
@@ -20,6 +20,7 @@ export interface ProductCardProps {
 }
 
 export default function ProductCard({
+  id,
   slug,
   name,
   brand,
@@ -30,11 +31,33 @@ export default function ProductCard({
   fullWidth = false,
 }: ProductCardProps) {
   const [liked, setLiked] = useState(wishlisted);
+  const [loading, setLoading] = useState(false);
 
-  const discount =
-    comparePrice && comparePrice > price
-      ? Math.round(((comparePrice - price) / comparePrice) * 100)
-      : null;
+  const handleWishlistToggle = useCallback(
+    async (e: React.MouseEvent<HTMLButtonElement>) => {
+      e.preventDefault();
+      setLoading(true);
+
+      try {
+        const response = await fetch("/api/wishlist", {
+          method: liked ? "DELETE" : "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ productId: id }),
+        });
+
+        if (!response.ok) {
+          throw new Error("Failed to update wishlist");
+        }
+
+        setLiked((v) => !v);
+      } catch (error) {
+        console.error("Wishlist error:", error);
+      } finally {
+        setLoading(false);
+      }
+    },
+    [liked, id]
+  );
 
   return (
     <article
@@ -45,7 +68,7 @@ export default function ProductCard({
     >
 
       {/* Image */}
-      <Link href={`/products/${slug}`} className="block">
+      <Link href={`/shop/${slug}`} className="block">
         <div className="relative w-full aspect-square bg-light-gray overflow-hidden">
           <Image
             src={image}
@@ -55,21 +78,16 @@ export default function ProductCard({
             className="object-cover transition-transform duration-500 group-hover:scale-105"
           />
 
-          {/* Discount badge */}
-          {discount && (
-            <span className="absolute top-3 left-3 px-2 py-0.5 rounded-full bg-accent text-soft-black text-[11px] font-bold">
-              -{discount}%
-            </span>
-          )}
         </div>
       </Link>
 
       {/* Wishlist button */}
       <button
-        onClick={() => setLiked((v) => !v)}
+        onClick={handleWishlistToggle}
+        disabled={loading}
         aria-label={liked ? "Remove from wishlist" : "Add to wishlist"}
         className={[
-          "absolute top-3 right-3 p-2 rounded-full bg-white/90 backdrop-blur-sm shadow-sm transition-all duration-200 hover:scale-110 active:scale-95",
+          "absolute top-3 right-3 p-2 rounded-full bg-white/90 backdrop-blur-sm shadow-sm transition-all duration-200 hover:scale-110 active:scale-95 disabled:opacity-50",
           liked ? "text-red-500" : "text-gray-400",
         ].join(" ")}
       >
@@ -86,7 +104,7 @@ export default function ProductCard({
           {brand}
         </p>
         <Link
-          href={`/products/${slug}`}
+          href={`/shop/${slug}`}
           className="text-sm font-semibold text-soft-black leading-snug line-clamp-2 hover:text-accent transition-colors duration-150"
         >
           {name}
@@ -95,11 +113,11 @@ export default function ProductCard({
         {/* Price row */}
         <div className="flex items-center gap-2 mt-1">
           <span className="text-sm font-bold text-soft-black">
-            ${price.toFixed(2)}
+            KSh {Math.round(price).toLocaleString()}
           </span>
           {comparePrice && comparePrice > price && (
             <span className="text-xs text-gray-400 line-through">
-              ${comparePrice.toFixed(2)}
+              KSh {Math.round(comparePrice).toLocaleString()}
             </span>
           )}
         </div>

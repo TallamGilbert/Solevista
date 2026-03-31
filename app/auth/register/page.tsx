@@ -70,7 +70,7 @@ export default function RegisterPage() {
       setServerError(
         typeof json.error === "string"
           ? json.error
-          : "Registration failed. Please try again."
+          : "Registration failed. Please try again.",
       );
       return;
     }
@@ -99,18 +99,23 @@ export default function RegisterPage() {
   return (
     <div className="min-h-[calc(100vh-4rem)] flex items-center justify-center px-4 py-12 bg-light-gray">
       <div className="w-full max-w-md">
-
         {/* Logo */}
         <div className="text-center mb-8">
-          <Link href="/" className="text-2xl font-black text-soft-black tracking-tight">
-            SNEAQR
+          <Link
+            href="/"
+            className="text-2xl font-black text-soft-black tracking-tight"
+          >
+            Solevista
           </Link>
-          <h1 className="text-2xl font-black text-soft-black mt-4">Create an account</h1>
-          <p className="text-sm text-gray-500 mt-1">Start your sneaker journey today</p>
+          <h1 className="text-2xl font-black text-soft-black mt-4">
+            Create an account
+          </h1>
+          <p className="text-sm text-gray-500 mt-1">
+            Start your footwear journey with Solévista today
+          </p>
         </div>
 
         <div className="bg-white rounded-2xl shadow-sm p-8 flex flex-col gap-6">
-
           {/* Server error */}
           {serverError && (
             <div className="flex items-center gap-2.5 px-4 py-3 rounded-2xl bg-red-50 border border-red-100 text-sm text-red-600">
@@ -127,10 +132,22 @@ export default function RegisterPage() {
             className="w-full flex items-center justify-center gap-3 py-3 rounded-2xl border border-gray-200 text-sm font-semibold text-soft-black hover:bg-light-gray disabled:opacity-60 disabled:cursor-wait transition-colors duration-150"
           >
             <svg width="18" height="18" viewBox="0 0 18 18" aria-hidden="true">
-              <path d="M17.64 9.2c0-.637-.057-1.251-.164-1.84H9v3.481h4.844a4.14 4.14 0 0 1-1.796 2.716v2.259h2.908c1.702-1.567 2.684-3.875 2.684-6.615Z" fill="#4285F4"/>
-              <path d="M9 18c2.43 0 4.467-.806 5.956-2.184l-2.908-2.259c-.806.54-1.837.86-3.048.86-2.344 0-4.328-1.584-5.036-3.711H.957v2.332A8.997 8.997 0 0 0 9 18Z" fill="#34A853"/>
-              <path d="M3.964 10.706A5.41 5.41 0 0 1 3.682 9c0-.593.102-1.17.282-1.706V4.962H.957A8.996 8.996 0 0 0 0 9c0 1.452.348 2.827.957 4.038l3.007-2.332Z" fill="#FBBC05"/>
-              <path d="M9 3.58c1.321 0 2.508.454 3.44 1.345l2.582-2.58C13.463.891 11.426 0 9 0A8.997 8.997 0 0 0 .957 4.962L3.964 7.294C4.672 5.163 6.656 3.58 9 3.58Z" fill="#EA4335"/>
+              <path
+                d="M17.64 9.2c0-.637-.057-1.251-.164-1.84H9v3.481h4.844a4.14 4.14 0 0 1-1.796 2.716v2.259h2.908c1.702-1.567 2.684-3.875 2.684-6.615Z"
+                fill="#4285F4"
+              />
+              <path
+                d="M9 18c2.43 0 4.467-.806 5.956-2.184l-2.908-2.259c-.806.54-1.837.86-3.048.86-2.344 0-4.328-1.584-5.036-3.711H.957v2.332A8.997 8.997 0 0 0 9 18Z"
+                fill="#34A853"
+              />
+              <path
+                d="M3.964 10.706A5.41 5.41 0 0 1 3.682 9c0-.593.102-1.17.282-1.706V4.962H.957A8.996 8.996 0 0 0 0 9c0 1.452.348 2.827.957 4.038l3.007-2.332Z"
+                fill="#FBBC05"
+              />
+              <path
+                d="M9 3.58c1.321 0 2.508.454 3.44 1.345l2.582-2.58C13.463.891 11.426 0 9 0A8.997 8.997 0 0 0 .957 4.962L3.964 7.294C4.672 5.163 6.656 3.58 9 3.58Z"
+                fill="#EA4335"
+              />
             </svg>
             {googleLoading ? "Redirecting…" : "Continue with Google"}
           </button>
@@ -138,13 +155,18 @@ export default function RegisterPage() {
           {/* Divider */}
           <div className="flex items-center gap-3">
             <div className="flex-1 h-px bg-gray-100" />
-            <span className="text-xs text-gray-400 font-medium">or register with email</span>
+            <span className="text-xs text-gray-400 font-medium">
+              or register with email
+            </span>
             <div className="flex-1 h-px bg-gray-100" />
           </div>
 
           {/* Form */}
-          <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-4" noValidate>
-
+          <form
+            onSubmit={handleSubmit(onSubmit)}
+            className="flex flex-col gap-4"
+            noValidate
+          >
             <Field label="Full Name" error={errors.name?.message}>
               <input
                 {...register("name")}
@@ -194,7 +216,9 @@ export default function RegisterPage() {
                           className={ok ? "text-green-500" : "text-gray-300"}
                           strokeWidth={ok ? 2.5 : 2}
                         />
-                        <span className={`text-[11px] ${ok ? "text-green-600" : "text-gray-400"}`}>
+                        <span
+                          className={`text-[11px] ${ok ? "text-green-600" : "text-gray-400"}`}
+                        >
                           {label}
                         </span>
                       </div>
@@ -204,7 +228,10 @@ export default function RegisterPage() {
               )}
             </Field>
 
-            <Field label="Confirm Password" error={errors.confirmPassword?.message}>
+            <Field
+              label="Confirm Password"
+              error={errors.confirmPassword?.message}
+            >
               <div className="relative">
                 <input
                   {...register("confirmPassword")}
@@ -226,11 +253,17 @@ export default function RegisterPage() {
 
             <p className="text-[11px] text-gray-400 leading-relaxed -mt-1">
               By creating an account you agree to our{" "}
-              <Link href="/terms" className="underline hover:text-soft-black transition-colors">
+              <Link
+                href="/terms"
+                className="underline hover:text-soft-black transition-colors"
+              >
                 Terms of Service
               </Link>{" "}
               and{" "}
-              <Link href="/privacy" className="underline hover:text-soft-black transition-colors">
+              <Link
+                href="/privacy"
+                className="underline hover:text-soft-black transition-colors"
+              >
                 Privacy Policy
               </Link>
               .

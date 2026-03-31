@@ -58,7 +58,7 @@ export default async function AdminOrdersPage() {
                     currentStatus={order.status}
                   />
                   <span className="text-sm font-bold text-soft-black">
-                    ${order.total.toFixed(2)}
+                    KSh {Math.round(order.total).toLocaleString()}
                   </span>
                 </div>
               </div>
@@ -87,7 +87,7 @@ export default async function AdminOrdersPage() {
                       </p>
                     </div>
                     <p className="text-sm font-semibold text-soft-black flex-shrink-0">
-                      ${(item.price * item.quantity).toFixed(2)}
+                      KSh {Math.round(item.price * item.quantity).toLocaleString()}
                     </p>
                   </div>
                 ))}

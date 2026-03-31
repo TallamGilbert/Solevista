@@ -7,8 +7,9 @@ const createOrderSchema = z.object({
   items: z
     .array(
       z.object({
-        productId: z.string().min(1),
-        sizeId: z.string().min(1),
+        productId: z.string().optional(),
+        sizeId: z.string().optional(),
+        sizeLabel: z.string().optional(),
         quantity: z.number().int().min(1),
         price: z.number().positive(),
       })
@@ -23,6 +24,7 @@ const createOrderSchema = z.object({
     zip: z.string().min(1),
     country: z.string().min(1),
   }),
+  guestEmail: z.string().email().optional(),
   paymentIntent: z.string().optional(),
 });
 
@@ -55,9 +57,6 @@ export async function GET(_req: NextRequest) {
 
 export async function POST(req: NextRequest) {
   const session = await auth();
-  if (!session?.user?.id) {
-    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-  }
 
   let body: unknown;
   try {
@@ -71,20 +70,31 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: parsed.error.flatten() }, { status: 422 });
   }
 
-  const { items, shippingAddress, paymentIntent } = parsed.data;
+  const { items, shippingAddress, guestEmail, paymentIntent } = parsed.data;
+
+  // Require either a logged-in user or a guest email
+  if (!session?.user?.id && !guestEmail) {
+    return NextResponse.json(
+      { error: "An email address is required to place an order." },
+      { status: 400 }
+    );
+  }
+
   const total = items.reduce((sum, item) => sum + item.price * item.quantity, 0);
 
   try {
     const order = await prisma.order.create({
       data: {
-        userId: session.user.id,
+        userId: session?.user?.id ?? null,
+        guestEmail: session?.user?.id ? null : guestEmail,
         total,
         shippingAddress,
         paymentIntent,
         items: {
           create: items.map((item) => ({
-            productId: item.productId,
-            sizeId: item.sizeId,
+            productId: item.productId ?? null,
+            sizeId: item.sizeId ?? null,
+            sizeLabel: item.sizeLabel ?? null,
             quantity: item.quantity,
             price: item.price,
           })),

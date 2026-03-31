@@ -7,14 +7,19 @@ import Image from "next/image";
 import Link from "next/link";
 
 // Mirrors Prisma Category enum — avoid importing @prisma/client in browser code
-type Category = "MEN" | "WOMEN" | "SNEAKERS" | "SPORTS" | "CASUAL";
+type Category = "MEN" | "WOMEN" | "KIDS" | "SNEAKERS" | "SPORTS" | "CASUAL" | "RUNNING" | "BOOTS" | "SANDALS" | "FORMAL";
 
 const CATEGORIES: { value: Category; label: string }[] = [
   { value: "MEN", label: "Men" },
   { value: "WOMEN", label: "Women" },
+  { value: "KIDS", label: "Kids" },
   { value: "SNEAKERS", label: "Sneakers" },
   { value: "SPORTS", label: "Sports" },
   { value: "CASUAL", label: "Casual" },
+  { value: "RUNNING", label: "Running" },
+  { value: "BOOTS", label: "Boots" },
+  { value: "SANDALS", label: "Sandals" },
+  { value: "FORMAL", label: "Formal" },
 ];
 
 export interface ProductFormInitialData {
@@ -271,15 +276,15 @@ export default function ProductForm({
 
           <div>
             <label className="text-xs font-semibold text-gray-500 uppercase tracking-wide block mb-1.5">
-              Price ($) *
+              Price (KSh) *
             </label>
             <input
               type="number"
-              step="0.01"
+              step="1"
               min="0"
               value={price}
               onChange={(e) => setPrice(e.target.value)}
-              placeholder="120.00"
+              placeholder="15600"
               className={inputCls(!!fieldErr("price"))}
               required
             />
@@ -290,15 +295,15 @@ export default function ProductForm({
 
           <div>
             <label className="text-xs font-semibold text-gray-500 uppercase tracking-wide block mb-1.5">
-              Compare ($)
+              Compare (KSh)
             </label>
             <input
               type="number"
-              step="0.01"
+              step="1"
               min="0"
               value={comparePrice}
               onChange={(e) => setComparePrice(e.target.value)}
-              placeholder="150.00"
+              placeholder="19500"
               className={inputCls()}
             />
           </div>

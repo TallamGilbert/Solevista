@@ -7,9 +7,14 @@ const CATEGORIES: { label: string; value: Category | "" }[] = [
   { label: "All", value: "" },
   { label: "Men", value: "MEN" },
   { label: "Women", value: "WOMEN" },
+  { label: "Kids", value: "KIDS" },
   { label: "Sneakers", value: "SNEAKERS" },
   { label: "Sports", value: "SPORTS" },
   { label: "Casual", value: "CASUAL" },
+  { label: "Running", value: "RUNNING" },
+  { label: "Boots", value: "BOOTS" },
+  { label: "Sandals", value: "SANDALS" },
+  { label: "Formal", value: "FORMAL" },
 ];
 
 const ALL_SIZES = ["5", "5.5", "6", "6.5", "7", "7.5", "8", "8.5", "9", "9.5", "10", "10.5", "11", "12"];
@@ -59,10 +64,10 @@ export default function FilterSidebar({
 
   return (
     <>
-      {/* Mobile overlay backdrop */}
+      {/* Mobile backdrop */}
       {isOpen && (
         <div
-          className="fixed inset-0 z-40 bg-soft-black/50 md:hidden"
+          className="fixed inset-0 z-40 bg-black/30 md:hidden"
           onClick={onClose}
         />
       )}
@@ -70,54 +75,49 @@ export default function FilterSidebar({
       {/* Sidebar panel */}
       <aside
         className={[
-          "fixed inset-y-0 left-0 z-50 w-[300px] bg-white flex flex-col transition-transform duration-300 md:static md:z-auto md:w-full md:translate-x-0 md:block",
-          isOpen ? "translate-x-0 shadow-2xl" : "-translate-x-full",
+          "fixed inset-y-0 left-0 z-50 w-72 bg-white flex flex-col transition-transform duration-300 ease-in-out",
+          "md:static md:z-auto md:w-full md:translate-x-0 md:bg-transparent",
+          isOpen ? "translate-x-0" : "-translate-x-full md:translate-x-0",
         ].join(" ")}
       >
-        {/* Sidebar header */}
-        <div className="flex items-center justify-between px-5 py-4 border-b border-gray-100 md:px-0 md:pb-4 md:border-0">
-          <div className="flex items-center gap-2">
-            <h2 className="text-sm font-bold text-soft-black">Filters</h2>
-            {activeCount > 0 && (
-              <span className="px-2 py-0.5 rounded-full bg-accent text-soft-black text-[11px] font-bold">
-                {activeCount}
-              </span>
-            )}
-          </div>
-          <div className="flex items-center gap-3">
+        {/* Header — mobile only */}
+        <div className="flex items-center justify-between px-6 py-4 border-b border-gray-100 md:hidden">
+          <span className="text-sm font-semibold text-[#111]">Filters</span>
+          <button onClick={onClose} aria-label="Close filters" className="text-gray-400 hover:text-[#111]">
+            <X size={16} />
+          </button>
+        </div>
+
+        {/* Filter content */}
+        <div className="flex-1 overflow-y-auto px-6 py-5 md:px-0 md:py-0 flex flex-col gap-8">
+
+          {/* Header row — desktop */}
+          <div className="hidden md:flex items-center justify-between">
+            <span className="text-xs font-semibold tracking-widest uppercase text-gray-400">
+              Filters {activeCount > 0 && `(${activeCount})`}
+            </span>
             {activeCount > 0 && (
               <button
                 onClick={onClear}
-                className="text-xs font-semibold text-gray-400 hover:text-soft-black transition-colors"
+                className="text-xs text-gray-400 hover:text-[#111] transition-colors"
               >
-                Clear all
+                Clear
               </button>
             )}
-            <button
-              onClick={onClose}
-              aria-label="Close filters"
-              className="p-1 text-gray-400 hover:text-soft-black md:hidden"
-            >
-              <X size={18} />
-            </button>
           </div>
-        </div>
-
-        {/* Scrollable filter content */}
-        <div className="flex-1 overflow-y-auto px-5 py-4 flex flex-col gap-7 md:px-0">
 
           {/* Category */}
-          <FilterSection title="Category">
-            <div className="flex flex-wrap gap-2">
+          <FilterSection label="Category">
+            <div className="flex flex-col gap-1">
               {CATEGORIES.map(({ label, value }) => (
                 <button
                   key={label}
                   onClick={() => onChange("category", value)}
                   className={[
-                    "px-3 py-1.5 rounded-2xl text-xs font-semibold border transition-all duration-150",
+                    "text-left text-sm py-1.5 transition-colors duration-150",
                     values.category === value
-                      ? "bg-soft-black text-white border-soft-black"
-                      : "text-gray-600 border-gray-200 hover:border-soft-black",
+                      ? "text-[#111] font-semibold"
+                      : "text-gray-400 hover:text-[#111]",
                   ].join(" ")}
                 >
                   {label}
@@ -127,49 +127,41 @@ export default function FilterSidebar({
           </FilterSection>
 
           {/* Price range */}
-          <FilterSection title="Price Range">
+          <FilterSection label="Price">
             <div className="flex flex-col gap-3">
-              <div className="flex items-center justify-between text-sm font-semibold text-soft-black">
-                <span>${values.minPrice}</span>
-                <span>${values.maxPrice}</span>
+              <div className="flex items-center justify-between text-sm text-[#111] font-medium">
+                <span>KSh {values.minPrice.toLocaleString()}</span>
+                <span>KSh {values.maxPrice.toLocaleString()}</span>
               </div>
-              <div className="flex flex-col gap-2">
-                <div className="flex items-center gap-3">
-                  <span className="text-[11px] text-gray-400 w-6">Min</span>
-                  <input
-                    type="range"
-                    min={PRICE_MIN}
-                    max={PRICE_MAX}
-                    step={10}
-                    value={values.minPrice}
-                    onChange={(e) => {
-                      const v = Number(e.target.value);
-                      if (v < values.maxPrice) onChange("minPrice", v);
-                    }}
-                    className="w-full h-1 accent-yellow-400 cursor-pointer"
-                  />
-                </div>
-                <div className="flex items-center gap-3">
-                  <span className="text-[11px] text-gray-400 w-6">Max</span>
-                  <input
-                    type="range"
-                    min={PRICE_MIN}
-                    max={PRICE_MAX}
-                    step={10}
-                    value={values.maxPrice}
-                    onChange={(e) => {
-                      const v = Number(e.target.value);
-                      if (v > values.minPrice) onChange("maxPrice", v);
-                    }}
-                    className="w-full h-1 accent-yellow-400 cursor-pointer"
-                  />
-                </div>
-              </div>
+              <input
+                type="range"
+                min={PRICE_MIN}
+                max={PRICE_MAX}
+                step={1000}
+                value={values.minPrice}
+                onChange={(e) => {
+                  const v = Number(e.target.value);
+                  if (v < values.maxPrice) onChange("minPrice", v);
+                }}
+                className="w-full h-px bg-gray-200 accent-[#EAB308] cursor-pointer"
+              />
+              <input
+                type="range"
+                min={PRICE_MIN}
+                max={PRICE_MAX}
+                step={1000}
+                value={values.maxPrice}
+                onChange={(e) => {
+                  const v = Number(e.target.value);
+                  if (v > values.minPrice) onChange("maxPrice", v);
+                }}
+                className="w-full h-px bg-gray-200 accent-[#EAB308] cursor-pointer"
+              />
             </div>
           </FilterSection>
 
           {/* Size */}
-          <FilterSection title="Size">
+          <FilterSection label="Size (UK)">
             <div className="flex flex-wrap gap-1.5">
               {ALL_SIZES.map((size) => {
                 const active = values.sizes.includes(size);
@@ -178,10 +170,10 @@ export default function FilterSidebar({
                     key={size}
                     onClick={() => toggleSize(size)}
                     className={[
-                      "w-12 py-1.5 rounded-xl text-xs font-semibold border transition-all duration-150",
+                      "w-11 py-1.5 text-xs rounded-lg border transition-all duration-150",
                       active
-                        ? "bg-accent text-soft-black border-accent"
-                        : "text-gray-600 border-gray-200 hover:border-soft-black",
+                        ? "bg-[#111] text-white border-[#111]"
+                        : "text-gray-500 border-gray-200 hover:border-gray-400",
                     ].join(" ")}
                   >
                     {size}
@@ -192,27 +184,27 @@ export default function FilterSidebar({
           </FilterSection>
 
           {/* Brand */}
-          <FilterSection title="Brand">
-            <div className="flex flex-col gap-2">
+          <FilterSection label="Brand">
+            <div className="flex flex-col gap-2.5">
               {ALL_BRANDS.map((brand) => {
                 const checked = values.brands.includes(brand);
                 return (
                   <label
                     key={brand}
-                    className="flex items-center gap-2.5 cursor-pointer group"
+                    className="flex items-center gap-3 cursor-pointer group"
                   >
                     <span
-                      className={[
-                        "w-4 h-4 rounded flex-shrink-0 border transition-all duration-150 flex items-center justify-center",
-                        checked
-                          ? "bg-soft-black border-soft-black"
-                          : "border-gray-300 group-hover:border-soft-black",
-                      ].join(" ")}
                       onClick={() => toggleBrand(brand)}
+                      className={[
+                        "w-3.5 h-3.5 rounded-sm border flex-shrink-0 flex items-center justify-center transition-all duration-150",
+                        checked
+                          ? "bg-[#111] border-[#111]"
+                          : "border-gray-300 group-hover:border-gray-500",
+                      ].join(" ")}
                     >
                       {checked && (
-                        <svg width="9" height="7" viewBox="0 0 9 7" fill="none">
-                          <path d="M1 3.5L3.5 6L8 1" stroke="white" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+                        <svg width="8" height="6" viewBox="0 0 8 6" fill="none">
+                          <path d="M1 3L3 5L7 1" stroke="white" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
                         </svg>
                       )}
                     </span>
@@ -222,7 +214,10 @@ export default function FilterSidebar({
                       checked={checked}
                       onChange={() => toggleBrand(brand)}
                     />
-                    <span className="text-sm text-gray-700 group-hover:text-soft-black transition-colors">
+                    <span className={[
+                      "text-sm transition-colors duration-150",
+                      checked ? "text-[#111] font-medium" : "text-gray-500 group-hover:text-[#111]",
+                    ].join(" ")}>
                       {brand}
                     </span>
                   </label>
@@ -230,6 +225,16 @@ export default function FilterSidebar({
               })}
             </div>
           </FilterSection>
+
+          {/* Mobile clear */}
+          {activeCount > 0 && (
+            <button
+              onClick={onClear}
+              className="md:hidden w-full py-3 rounded-2xl border border-gray-200 text-sm font-semibold text-[#111] hover:bg-gray-50 transition-colors"
+            >
+              Clear all filters
+            </button>
+          )}
         </div>
       </aside>
     </>
@@ -237,17 +242,17 @@ export default function FilterSidebar({
 }
 
 function FilterSection({
-  title,
+  label,
   children,
 }: {
-  title: string;
+  label: string;
   children: React.ReactNode;
 }) {
   return (
-    <div className="flex flex-col gap-3">
-      <h3 className="text-[11px] font-semibold uppercase tracking-widest text-gray-400">
-        {title}
-      </h3>
+    <div className="flex flex-col gap-3 border-t border-gray-100 pt-6 first:border-0 first:pt-0">
+      <p className="text-xs font-semibold tracking-widest uppercase text-gray-400">
+        {label}
+      </p>
       {children}
     </div>
   );

@@ -11,6 +11,7 @@ import {
 import { ShieldCheck, Lock } from "lucide-react";
 import { getStripe } from "@/lib/stripe";
 import { useCart } from "@/context/CartContext";
+import toast from "react-hot-toast";
 import PaymentMethodSelector, { PaymentMethod } from "./PaymentMethodSelector";
 import type { ShippingFormData } from "./ShippingForm";
 
@@ -32,7 +33,34 @@ function CardPaymentForm({
   const stripe = useStripe();
   const elements = useElements();
   const router = useRouter();
-  const { clearCart } = useCart();
+  const { cartItems, clearCart } = useCart();
+
+  async function saveOrder(paymentIntentId?: string) {
+    const res = await fetch("/api/orders", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        items: cartItems.map((item) => ({
+          productId: item.productId || undefined,
+          sizeId: item.sizeId || undefined,
+          sizeLabel: item.size,
+          quantity: item.quantity,
+          price: item.price,
+        })),
+        shippingAddress: {
+          name: `${shippingData.firstName} ${shippingData.lastName}`,
+          line1: shippingData.address,
+          city: shippingData.city,
+          state: shippingData.city,
+          zip: shippingData.postalCode,
+          country: shippingData.country,
+        },
+        guestEmail: shippingData.email,
+        paymentIntent: paymentIntentId,
+      }),
+    });
+    if (!res.ok) throw new Error("Failed to save order");
+  }
 
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -46,6 +74,7 @@ function CardPaymentForm({
       // Dev/mock mode — no real Stripe key configured
       if (isMock || !clientSecret) {
         await new Promise((r) => setTimeout(r, 1200)); // Simulate network
+        await saveOrder();
         clearCart();
         router.push("/orders/confirmation");
         return;
@@ -84,11 +113,14 @@ function CardPaymentForm({
       if (stripeError) {
         setError(stripeError.message ?? "Payment failed.");
       } else if (paymentIntent?.status === "succeeded") {
+        await saveOrder(paymentIntent.id);
         clearCart();
         router.push("/orders/confirmation");
       }
-    } catch {
-      setError("Something went wrong. Please try again.");
+    } catch (err) {
+      const msg = err instanceof Error ? err.message : "Something went wrong.";
+      setError(msg);
+      toast.error(msg);
     } finally {
       setLoading(false);
     }
@@ -159,7 +191,7 @@ function CardPaymentForm({
         >
           {loading
             ? "Processing…"
-            : `Place Order · $${total.toFixed(2)}`}
+            : `Place Order · KSh ${Math.round(total).toLocaleString()}`}
         </button>
         <button
           type="button"
@@ -185,7 +217,7 @@ interface PaymentStepProps {
 export default function PaymentStep({ shippingData, total, onBack }: PaymentStepProps) {
   const [clientSecret, setClientSecret] = useState<string | null>(null);
   const [isMock, setIsMock] = useState(false);
-  const [method, setMethod] = useState<PaymentMethod>("card");
+  const [method, setMethod] = useState<PaymentMethod>("mpesa");
   const [ready, setReady] = useState(false);
 
   useEffect(() => {
@@ -221,7 +253,7 @@ export default function PaymentStep({ shippingData, total, onBack }: PaymentStep
 
   const stripeOptions = clientSecret
     ? { clientSecret }
-    : { mode: "payment" as const, amount: Math.round(total * 100), currency: "usd" };
+    : { mode: "payment" as const, amount: Math.round(total * 100), currency: "kes" };
 
   return (
     <div className="flex flex-col gap-6">
