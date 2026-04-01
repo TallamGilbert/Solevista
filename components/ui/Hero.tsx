@@ -25,7 +25,7 @@ export default function Hero() {
     <section className="relative w-full min-h-screen bg-[#FAFAF9] overflow-hidden flex flex-col justify-between">
       {/* Top label */}
       <div className="relative z-10 max-w-7xl mx-auto w-full px-6 md:px-16 pt-10">
-        <p className="text-[11px] tracking-[0.25em] uppercase text-gray-400 font-medium">
+        <p className="text-[11px] tracking-[0.25em] uppercase text-gray-400 font-medium ">
           Free delivery to Nairobi & major cities over KSh 15,000
         </p>
       </div>
@@ -60,7 +60,8 @@ export default function Hero() {
 
             <div className="flex flex-col gap-6 max-w-xs">
               <p className="text-sm text-[#555] leading-relaxed">
-                Kenya-based. Premium footwear for every step. 100% authentic, trusted by 50K+ customers.
+                Kenya-based. Premium footwear for every step. 100% authentic,
+                trusted by 50K+ customers.
               </p>
               <div className="flex items-center gap-6">
                 <Link
@@ -125,7 +126,7 @@ export default function Hero() {
               {SHOES.map((shoe, i) => (
                 <div
                   key={i}
-                  className="absolute inset-0 transition-opacity duration-700 ease-in-out"
+                  className="absolute inset-0 transition-opacity duration-1200 ease-in-out"
                   style={{ opacity: i === current ? 1 : 0 }}
                 >
                   <Image
