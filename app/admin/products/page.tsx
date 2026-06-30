@@ -4,6 +4,8 @@ import Link from "next/link";
 import { Plus, Pencil } from "lucide-react";
 import DeleteProductButton from "./DeleteProductButton";
 
+export const dynamic = "force-dynamic";
+
 const CATEGORY_STYLES: Record<string, string> = {
   MEN: "bg-blue-100 text-blue-700",
   WOMEN: "bg-pink-100 text-pink-700",
@@ -22,7 +24,6 @@ export default async function AdminProductsPage() {
 
   return (
     <div className="space-y-6">
-
       {/* Header */}
       <div className="bg-white rounded-2xl shadow-sm px-6 py-5 flex items-center justify-between">
         <div>
@@ -45,7 +46,10 @@ export default async function AdminProductsPage() {
         {products.length === 0 ? (
           <div className="px-6 py-14 text-center text-sm text-gray-400">
             No products yet.{" "}
-            <Link href="/admin/products/new" className="text-accent font-semibold hover:underline">
+            <Link
+              href="/admin/products/new"
+              className="text-accent font-semibold hover:underline"
+            >
               Add your first product
             </Link>
           </div>
@@ -74,8 +78,10 @@ export default async function AdminProductsPage() {
               </thead>
               <tbody className="divide-y divide-gray-50">
                 {products.map((product) => (
-                  <tr key={product.id} className="hover:bg-light-gray transition-colors">
-
+                  <tr
+                    key={product.id}
+                    className="hover:bg-light-gray transition-colors"
+                  >
                     {/* Thumbnail */}
                     <td className="pl-6 pr-2 py-3">
                       <div className="relative w-10 h-10 rounded-xl bg-light-gray overflow-hidden flex-shrink-0">
@@ -93,18 +99,24 @@ export default async function AdminProductsPage() {
 
                     {/* Name + Brand */}
                     <td className="px-4 py-3">
-                      <p className="font-semibold text-soft-black leading-tight">{product.name}</p>
-                      <p className="text-xs text-gray-400 mt-0.5">{product.brand}</p>
+                      <p className="font-semibold text-soft-black leading-tight">
+                        {product.name}
+                      </p>
+                      <p className="text-xs text-gray-400 mt-0.5">
+                        {product.brand}
+                      </p>
                     </td>
 
                     {/* Category */}
                     <td className="px-4 py-3">
                       <span
                         className={`text-[11px] font-semibold px-2.5 py-0.5 rounded-full ${
-                          CATEGORY_STYLES[product.category] ?? "bg-gray-100 text-gray-600"
+                          CATEGORY_STYLES[product.category] ??
+                          "bg-gray-100 text-gray-600"
                         }`}
                       >
-                        {product.category.charAt(0) + product.category.slice(1).toLowerCase()}
+                        {product.category.charAt(0) +
+                          product.category.slice(1).toLowerCase()}
                       </span>
                     </td>
 
@@ -113,11 +125,13 @@ export default async function AdminProductsPage() {
                       <span className="font-semibold text-soft-black">
                         KSh {Math.round(product.price).toLocaleString()}
                       </span>
-                      {product.comparePrice && product.comparePrice > product.price && (
-                        <span className="text-xs text-gray-400 line-through ml-1.5">
-                          KSh {Math.round(product.comparePrice).toLocaleString()}
-                        </span>
-                      )}
+                      {product.comparePrice &&
+                        product.comparePrice > product.price && (
+                          <span className="text-xs text-gray-400 line-through ml-1.5">
+                            KSh{" "}
+                            {Math.round(product.comparePrice).toLocaleString()}
+                          </span>
+                        )}
                     </td>
 
                     {/* Stock */}
@@ -127,8 +141,8 @@ export default async function AdminProductsPage() {
                           product.stock === 0
                             ? "text-red-500"
                             : product.stock < 10
-                            ? "text-yellow-600"
-                            : "text-green-600"
+                              ? "text-yellow-600"
+                              : "text-green-600"
                         }`}
                       >
                         {product.stock}

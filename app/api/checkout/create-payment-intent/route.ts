@@ -8,14 +8,14 @@ export async function POST(req: Request) {
     // Return a mock response so the UI can render in development
     return NextResponse.json(
       { clientSecret: null, mock: true },
-      { status: 200 }
+      { status: 200 },
     );
   }
 
   try {
     const { amount } = (await req.json()) as { amount: number };
 
-    const stripe = new Stripe(secretKey, { apiVersion: "2024-11-20.acacia" });
+    const stripe = new Stripe(secretKey, { apiVersion: "2025-02-24.acacia" });
 
     const paymentIntent = await stripe.paymentIntents.create({
       amount: Math.round(amount * 100), // Convert dollars → cents

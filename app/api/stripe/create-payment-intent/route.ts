@@ -9,7 +9,7 @@ const cartSchema = z.object({
       z.object({
         productId: z.string().min(1),
         quantity: z.number().int().min(1),
-      })
+      }),
     )
     .min(1),
 });
@@ -30,7 +30,10 @@ export async function POST(req: NextRequest) {
 
   const parsed = cartSchema.safeParse(body);
   if (!parsed.success) {
-    return NextResponse.json({ error: parsed.error.flatten() }, { status: 422 });
+    return NextResponse.json(
+      { error: parsed.error.flatten() },
+      { status: 422 },
+    );
   }
 
   const { items } = parsed.data;
@@ -48,7 +51,7 @@ export async function POST(req: NextRequest) {
       if (!productMap.has(item.productId)) {
         return NextResponse.json(
           { error: `Product ${item.productId} not found` },
-          { status: 404 }
+          { status: 404 },
         );
       }
     }
@@ -58,7 +61,7 @@ export async function POST(req: NextRequest) {
       return sum + Math.round(product.price * 100) * item.quantity;
     }, 0);
 
-    const stripe = new Stripe(secretKey, { apiVersion: "2024-11-20.acacia" });
+    const stripe = new Stripe(secretKey, { apiVersion: "2025-02-24.acacia" });
 
     const paymentIntent = await stripe.paymentIntents.create({
       amount: totalCents,
@@ -66,7 +69,7 @@ export async function POST(req: NextRequest) {
       automatic_payment_methods: { enabled: true },
       metadata: {
         items: JSON.stringify(
-          items.map((i) => ({ productId: i.productId, quantity: i.quantity }))
+          items.map((i) => ({ productId: i.productId, quantity: i.quantity })),
         ),
       },
     });

@@ -1,15 +1,16 @@
 import { auth } from "@/auth";
 import { NextResponse } from "next/server";
-import type { NextRequest } from "next/server";
+// import type { NextRequest } from "next/server";
 
 const PROTECTED_PREFIXES = ["/dashboard", "/account"];
 const ADMIN_PREFIX = "/admin";
 const AUTH_PAGES = ["/auth/login", "/auth/register"];
 
-export default auth((req: NextRequest & { auth: Awaited<ReturnType<typeof auth>> }) => {
-  const { nextUrl, auth: session } = req;
+export default auth((req) => {
+  const session = req.auth;
   const isLoggedIn = !!session?.user;
   const isAdmin = session?.user?.role === "ADMIN";
+  const { nextUrl } = req;
 
   // Redirect authenticated users away from auth pages
   if (isLoggedIn && AUTH_PAGES.some((p) => nextUrl.pathname.startsWith(p))) {

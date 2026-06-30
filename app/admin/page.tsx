@@ -1,6 +1,15 @@
 import { prisma } from "@/lib/prisma";
 import Link from "next/link";
-import { ShoppingBag, Package, Users, DollarSign, ChevronRight, TrendingUp } from "lucide-react";
+import {
+  ShoppingBag,
+  Package,
+  Users,
+  DollarSign,
+  ChevronRight,
+  TrendingUp,
+} from "lucide-react";
+
+export const dynamic = "force-dynamic";
 
 const STATUS_STYLES = {
   PENDING: "bg-yellow-100 text-yellow-700",
@@ -70,13 +79,14 @@ export default async function AdminPage() {
 
   return (
     <div className="space-y-6">
-
       {/* Header */}
       <div className="bg-white rounded-2xl shadow-sm px-6 py-5 flex items-center gap-3">
         <TrendingUp size={22} className="text-accent" />
         <div>
           <h1 className="text-xl font-black text-soft-black">Admin Overview</h1>
-          <p className="text-sm text-gray-400 mt-0.5">Store performance at a glance</p>
+          <p className="text-sm text-gray-400 mt-0.5">
+            Store performance at a glance
+          </p>
         </div>
       </div>
 
@@ -88,7 +98,9 @@ export default async function AdminPage() {
             href={href}
             className="bg-white rounded-2xl shadow-sm p-5 hover:shadow-md transition-all duration-200 hover:-translate-y-0.5"
           >
-            <div className={`w-10 h-10 rounded-xl flex items-center justify-center mb-4 ${color}`}>
+            <div
+              className={`w-10 h-10 rounded-xl flex items-center justify-center mb-4 ${color}`}
+            >
               <Icon size={20} />
             </div>
             <p className="text-2xl font-black text-soft-black">{value}</p>
@@ -137,12 +149,15 @@ export default async function AdminPage() {
               </thead>
               <tbody className="divide-y divide-gray-50">
                 {recentOrders.map((order) => (
-                  <tr key={order.id} className="hover:bg-light-gray transition-colors">
+                  <tr
+                    key={order.id}
+                    className="hover:bg-light-gray transition-colors"
+                  >
                     <td className="px-6 py-3.5 font-semibold text-soft-black">
                       #{order.id.slice(-8).toUpperCase()}
                     </td>
                     <td className="px-6 py-3.5 text-gray-500">
-                      {order.user.name ?? order.user.email}
+                      {order.user?.name ?? order.user?.email ?? "Unknown"}
                     </td>
                     <td className="px-6 py-3.5 text-gray-500">
                       {order._count.items}

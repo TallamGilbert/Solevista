@@ -39,7 +39,6 @@ export default async function OrdersPage() {
 
   return (
     <div className="space-y-4">
-
       {/* Header */}
       <div className="bg-white rounded-2xl shadow-sm px-6 py-5">
         <h1 className="text-xl font-black text-soft-black">Order History</h1>
@@ -65,8 +64,10 @@ export default async function OrdersPage() {
       ) : (
         <ul className="space-y-4">
           {orders.map((order) => (
-            <li key={order.id} className="bg-white rounded-2xl shadow-sm overflow-hidden">
-
+            <li
+              key={order.id}
+              className="bg-white rounded-2xl shadow-sm overflow-hidden"
+            >
               {/* Order header */}
               <div className="flex flex-wrap items-center justify-between gap-3 px-6 py-4 border-b border-gray-100">
                 <div>
@@ -98,12 +99,15 @@ export default async function OrdersPage() {
               {/* Line items */}
               <ul className="divide-y divide-gray-50">
                 {order.items.map((item) => (
-                  <li key={item.id} className="flex items-center gap-4 px-6 py-4">
+                  <li
+                    key={item.id}
+                    className="flex items-center gap-4 px-6 py-4"
+                  >
                     <div className="relative w-14 h-14 rounded-xl bg-light-gray overflow-hidden flex-shrink-0">
-                      {item.product.images[0] && (
+                      {item.product?.images?.[0] && (
                         <Image
                           src={item.product.images[0]}
-                          alt={item.product.name}
+                          alt={item.product?.name ?? ""}
                           fill
                           sizes="56px"
                           className="object-cover"
@@ -112,13 +116,13 @@ export default async function OrdersPage() {
                     </div>
                     <div className="flex-1 min-w-0">
                       <Link
-                        href={`/shop/${item.product.slug}`}
+                        href={`/shop/${item.product?.slug ?? "#"}`}
                         className="text-sm font-semibold text-soft-black truncate hover:text-accent transition-colors block"
                       >
-                        {item.product.name}
+                        {item.product?.name ?? "Product"}
                       </Link>
                       <p className="text-xs text-gray-400 mt-0.5">
-                        Size {item.size.label} · Qty {item.quantity}
+                        Size {item.size?.label ?? "N/A"} · Qty {item.quantity}
                       </p>
                     </div>
                     <p className="text-sm font-bold text-soft-black flex-shrink-0">

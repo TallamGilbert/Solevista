@@ -23,7 +23,10 @@ export async function GET(req: NextRequest) {
   const parsed = querySchema.safeParse(params);
 
   if (!parsed.success) {
-    return NextResponse.json({ error: parsed.error.flatten() }, { status: 400 });
+    return NextResponse.json(
+      { error: parsed.error.flatten() },
+      { status: 400 },
+    );
   }
 
   const { category, brand, minPrice, maxPrice, size, sort, page, limit, q } =
@@ -36,8 +39,10 @@ export async function GET(req: NextRequest) {
 
   if (minPrice !== undefined || maxPrice !== undefined) {
     where.price = {};
-    if (minPrice !== undefined) (where.price as Prisma.FloatFilter).gte = minPrice;
-    if (maxPrice !== undefined) (where.price as Prisma.FloatFilter).lte = maxPrice;
+    if (minPrice !== undefined)
+      (where.price as Prisma.FloatFilter).gte = minPrice;
+    if (maxPrice !== undefined)
+      (where.price as Prisma.FloatFilter).lte = maxPrice;
   }
 
   if (q) {
@@ -56,10 +61,10 @@ export async function GET(req: NextRequest) {
     sort === "price_asc"
       ? { price: "asc" }
       : sort === "price_desc"
-      ? { price: "desc" }
-      : sort === "rating"
-      ? { rating: "desc" }
-      : { createdAt: "desc" };
+        ? { price: "desc" }
+        : sort === "rating"
+          ? { rating: "desc" }
+          : { createdAt: "desc" };
 
   const skip = (page - 1) * limit;
 
@@ -72,7 +77,7 @@ export async function GET(req: NextRequest) {
         take: limit,
         include: {
           sizes: true,
-          _count: { select: { reviews: true } },
+          _count: { select: { orderItems: true } },
         },
       }),
       prisma.product.count({ where }),
@@ -88,7 +93,8 @@ export async function GET(req: NextRequest) {
       },
     });
   } catch (err) {
-    const message = err instanceof Error ? err.message : "Failed to fetch products";
+    const message =
+      err instanceof Error ? err.message : "Failed to fetch products";
     return NextResponse.json({ error: message }, { status: 500 });
   }
 }

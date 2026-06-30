@@ -3,20 +3,14 @@ import { prisma } from "@/lib/prisma";
 
 export async function GET(
   _req: NextRequest,
-  { params }: { params: { slug: string } }
+  { params }: { params: { slug: string } },
 ) {
   try {
     const product = await prisma.product.findUnique({
       where: { slug: params.slug },
       include: {
         sizes: true,
-        reviews: {
-          include: {
-            user: { select: { name: true } },
-          },
-          orderBy: { createdAt: "desc" },
-        },
-        _count: { select: { reviews: true } },
+        _count: { select: { orderItems: true } },
       },
     });
 
@@ -26,7 +20,8 @@ export async function GET(
 
     return NextResponse.json(product);
   } catch (err) {
-    const message = err instanceof Error ? err.message : "Failed to fetch product";
+    const message =
+      err instanceof Error ? err.message : "Failed to fetch product";
     return NextResponse.json({ error: message }, { status: 500 });
   }
 }

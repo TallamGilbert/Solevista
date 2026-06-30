@@ -2,6 +2,8 @@ import { prisma } from "@/lib/prisma";
 import Image from "next/image";
 import StatusDropdown from "./StatusDropdown";
 
+export const dynamic = "force-dynamic";
+
 export default async function AdminOrdersPage() {
   const orders = await prisma.order.findMany({
     orderBy: { createdAt: "desc" },
@@ -18,7 +20,6 @@ export default async function AdminOrdersPage() {
 
   return (
     <div className="space-y-6">
-
       {/* Header */}
       <div className="bg-white rounded-2xl shadow-sm px-6 py-5">
         <h1 className="text-xl font-black text-soft-black">Orders</h1>
@@ -35,8 +36,10 @@ export default async function AdminOrdersPage() {
           </div>
         ) : (
           orders.map((order) => (
-            <div key={order.id} className="bg-white rounded-2xl shadow-sm overflow-hidden">
-
+            <div
+              key={order.id}
+              className="bg-white rounded-2xl shadow-sm overflow-hidden"
+            >
               {/* Order header row */}
               <div className="flex flex-wrap items-center justify-between gap-3 px-6 py-4 border-b border-gray-100">
                 <div>
@@ -44,7 +47,10 @@ export default async function AdminOrdersPage() {
                     #{order.id.slice(-8).toUpperCase()}
                   </p>
                   <p className="text-xs text-gray-400 mt-0.5">
-                    {order.user.name ?? order.user.email} ·{" "}
+                    {order.user?.name ??
+                      order.user?.email ??
+                      "Unknown Customer"}{" "}
+                    ·{" "}
                     {new Date(order.createdAt).toLocaleDateString("en-US", {
                       month: "short",
                       day: "numeric",
@@ -66,9 +72,12 @@ export default async function AdminOrdersPage() {
               {/* Line items */}
               <div className="divide-y divide-gray-50">
                 {order.items.map((item) => (
-                  <div key={item.id} className="flex items-center gap-4 px-6 py-3">
+                  <div
+                    key={item.id}
+                    className="flex items-center gap-4 px-6 py-3"
+                  >
                     <div className="relative w-10 h-10 rounded-lg bg-light-gray overflow-hidden flex-shrink-0">
-                      {item.product.images[0] && (
+                      {item.product?.images?.[0] && (
                         <Image
                           src={item.product.images[0]}
                           alt={item.product.name}
@@ -80,14 +89,16 @@ export default async function AdminOrdersPage() {
                     </div>
                     <div className="flex-1 min-w-0">
                       <p className="text-sm font-medium text-soft-black truncate">
-                        {item.product.name}
+                        {item.product?.name ?? "Unknown Product"}
                       </p>
                       <p className="text-xs text-gray-400">
-                        Size {item.size.label} · Qty {item.quantity}
+                        Size {item.size?.label ?? "Unknown Size"} · Qty{" "}
+                        {item.quantity}
                       </p>
                     </div>
                     <p className="text-sm font-semibold text-soft-black flex-shrink-0">
-                      KSh {Math.round(item.price * item.quantity).toLocaleString()}
+                      KSh{" "}
+                      {Math.round(item.price * item.quantity).toLocaleString()}
                     </p>
                   </div>
                 ))}

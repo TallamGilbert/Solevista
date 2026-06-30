@@ -1,4 +1,14 @@
-export type Category = "MEN" | "WOMEN" | "KIDS" | "SNEAKERS" | "SPORTS" | "CASUAL" | "RUNNING" | "BOOTS" | "SANDALS" | "FORMAL";
+export type Category =
+  | "MEN"
+  | "WOMEN"
+  | "KIDS"
+  | "SNEAKERS"
+  | "SPORTS"
+  | "CASUAL"
+  | "RUNNING"
+  | "BOOTS"
+  | "SANDALS"
+  | "FORMAL";
 
 export interface MockProduct {
   id: string;
@@ -312,10 +322,9 @@ export function getProductBySlug(slug: string): MockProduct | undefined {
   return MOCK_PRODUCTS.find((p) => p.slug === slug);
 }
 
-export const ALL_BRANDS = [
-  ...new Set(MOCK_PRODUCTS.map((p) => p.brand)),
-].sort();
-
+export const ALL_BRANDS = Array.from(
+  new Set(MOCK_PRODUCTS.map((p) => p.brand)),
+).sort();
 export const PRICE_MIN = 0;
 export const PRICE_MAX = 65000;
 export const ITEMS_PER_PAGE = 9;
