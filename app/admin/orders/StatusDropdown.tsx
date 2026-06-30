@@ -44,7 +44,9 @@ export default function StatusDropdown({
       disabled={isPending}
       onChange={(e) => {
         const status = e.target.value as OrderStatus;
-        startTransition(() => updateOrderStatus(orderId, status));
+        startTransition(() => {
+          updateOrderStatus(orderId, status);
+        });
       }}
       className={[
         "text-[11px] font-semibold px-2 py-1 rounded-lg border cursor-pointer",
