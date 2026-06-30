@@ -12,7 +12,7 @@ const createOrderSchema = z.object({
         sizeLabel: z.string().optional(),
         quantity: z.number().int().min(1),
         price: z.number().positive(),
-      })
+      }),
     )
     .min(1),
   shippingAddress: z.object({
@@ -28,7 +28,7 @@ const createOrderSchema = z.object({
   paymentIntent: z.string().optional(),
 });
 
-export async function GET(_req: NextRequest) {
+export async function GET() {
   const session = await auth();
   if (!session?.user?.id) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
@@ -50,7 +50,8 @@ export async function GET(_req: NextRequest) {
 
     return NextResponse.json(orders);
   } catch (err) {
-    const message = err instanceof Error ? err.message : "Failed to fetch orders";
+    const message =
+      err instanceof Error ? err.message : "Failed to fetch orders";
     return NextResponse.json({ error: message }, { status: 500 });
   }
 }
@@ -67,7 +68,10 @@ export async function POST(req: NextRequest) {
 
   const parsed = createOrderSchema.safeParse(body);
   if (!parsed.success) {
-    return NextResponse.json({ error: parsed.error.flatten() }, { status: 422 });
+    return NextResponse.json(
+      { error: parsed.error.flatten() },
+      { status: 422 },
+    );
   }
 
   const { items, shippingAddress, guestEmail, paymentIntent } = parsed.data;
@@ -76,11 +80,14 @@ export async function POST(req: NextRequest) {
   if (!session?.user?.id && !guestEmail) {
     return NextResponse.json(
       { error: "An email address is required to place an order." },
-      { status: 400 }
+      { status: 400 },
     );
   }
 
-  const total = items.reduce((sum, item) => sum + item.price * item.quantity, 0);
+  const total = items.reduce(
+    (sum, item) => sum + item.price * item.quantity,
+    0,
+  );
 
   try {
     const order = await prisma.order.create({
@@ -112,7 +119,8 @@ export async function POST(req: NextRequest) {
 
     return NextResponse.json(order, { status: 201 });
   } catch (err) {
-    const message = err instanceof Error ? err.message : "Failed to create order";
+    const message =
+      err instanceof Error ? err.message : "Failed to create order";
     return NextResponse.json({ error: message }, { status: 500 });
   }
 }

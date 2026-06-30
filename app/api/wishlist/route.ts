@@ -15,7 +15,7 @@ async function getOrCreateWishlist(userId: string) {
   });
 }
 
-export async function GET(_req: NextRequest) {
+export async function GET() {
   const session = await auth();
   if (!session?.user?.id) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
@@ -36,7 +36,8 @@ export async function GET(_req: NextRequest) {
 
     return NextResponse.json(wishlist ?? { products: [] });
   } catch (err) {
-    const message = err instanceof Error ? err.message : "Failed to fetch wishlist";
+    const message =
+      err instanceof Error ? err.message : "Failed to fetch wishlist";
     return NextResponse.json({ error: message }, { status: 500 });
   }
 }
@@ -56,13 +57,18 @@ export async function POST(req: NextRequest) {
 
   const parsed = productSchema.safeParse(body);
   if (!parsed.success) {
-    return NextResponse.json({ error: parsed.error.flatten() }, { status: 422 });
+    return NextResponse.json(
+      { error: parsed.error.flatten() },
+      { status: 422 },
+    );
   }
 
   const { productId } = parsed.data;
 
   try {
-    const product = await prisma.product.findUnique({ where: { id: productId } });
+    const product = await prisma.product.findUnique({
+      where: { id: productId },
+    });
     if (!product) {
       return NextResponse.json({ error: "Product not found" }, { status: 404 });
     }
@@ -79,7 +85,8 @@ export async function POST(req: NextRequest) {
 
     return NextResponse.json({ message: "Added to wishlist" }, { status: 201 });
   } catch (err) {
-    const message = err instanceof Error ? err.message : "Failed to update wishlist";
+    const message =
+      err instanceof Error ? err.message : "Failed to update wishlist";
     return NextResponse.json({ error: message }, { status: 500 });
   }
 }
@@ -99,7 +106,10 @@ export async function DELETE(req: NextRequest) {
 
   const parsed = productSchema.safeParse(body);
   if (!parsed.success) {
-    return NextResponse.json({ error: parsed.error.flatten() }, { status: 422 });
+    return NextResponse.json(
+      { error: parsed.error.flatten() },
+      { status: 422 },
+    );
   }
 
   const { productId } = parsed.data;
@@ -110,7 +120,10 @@ export async function DELETE(req: NextRequest) {
     });
 
     if (!wishlist) {
-      return NextResponse.json({ error: "Wishlist not found" }, { status: 404 });
+      return NextResponse.json(
+        { error: "Wishlist not found" },
+        { status: 404 },
+      );
     }
 
     await prisma.wishlistProduct.delete({
@@ -121,7 +134,8 @@ export async function DELETE(req: NextRequest) {
 
     return NextResponse.json({ message: "Removed from wishlist" });
   } catch (err) {
-    const message = err instanceof Error ? err.message : "Failed to update wishlist";
+    const message =
+      err instanceof Error ? err.message : "Failed to update wishlist";
     return NextResponse.json({ error: message }, { status: 500 });
   }
 }
